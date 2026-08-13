@@ -1,0 +1,53 @@
+.project-progress-title i {
+  color: #eb5348;
+  font-size: 20px;
+}
+.project-progress-legend {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 24px;
+  flex-wrap: wrap;
+  padding-top: 28px;
+}
+.project-progress-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.legend-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.legend-label {
+  color: #8f98b8;
+  font-size: 14px;
+}
+.project-progress-chart {
+  height: 220px;
+  width: 100%;
+}
+.chart-tooltip {
+  background: #fff;
+  border-radius: 8px;
+  padding: 8px 10px;
+  display: flex;
+  gap: 5px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+}
+.chart-tooltip strong {
+  color: #10276d;
+  font-size: 13px;
+}
+.chart-tooltip span {
+  color: #8f98b8;
+  font-size: 13px;
+}
+.chart-tooltip-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}

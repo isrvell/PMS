@@ -1,0 +1,23 @@
+.stat-icon {
+  font-size: 24px;
+  background: #e8ebf5;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.stat-icon i {
+  color: #10276d;
+}
+.stat-card-value {
+  font-size: 28px;
+  font-weight: 700;
+  color: #10276d;
+}
+.stat-card-title {
+  margin: 0;
+  color: #9398bb;
+  font-size: 18px;
+}

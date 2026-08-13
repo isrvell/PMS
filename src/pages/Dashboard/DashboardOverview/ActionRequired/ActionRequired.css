@@ -1,0 +1,16 @@
+.actions h4 {
+  color: #10276d;
+}
+.actions-title i {
+  color: #eb5348;
+  font-size: 20px;
+}
+.actions-title {
+  color: #10276d;
+  font-size: 17px;
+  overflow-wrap: anywhere;
+}
+.action-dueDate {
+  color: #8f98b8;
+  font-size: 15px;
+}

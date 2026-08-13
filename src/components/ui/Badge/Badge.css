@@ -1,0 +1,14 @@
+.badge {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  background-color: #eb5348;
+  color: #fff;
+  width: 18px;
+  height: 18px;
+  right: 0;
+  top: 0;
+  position: absolute;
+  border-radius: 50%;
+}

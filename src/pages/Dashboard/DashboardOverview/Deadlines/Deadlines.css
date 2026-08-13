@@ -1,0 +1,38 @@
+.deadline-title i {
+  color: #eb5348;
+  font-size: 20px;
+}
+.deadline h4 {
+  color: #10276d;
+}
+.deadline-date {
+  width: 60px;
+  height: 60px;
+  background: #e8ebf5;
+  border-radius: 10px;
+}
+.deadline-date span {
+  font-size: 28px;
+  font-weight: 600;
+  color: #10276d;
+  line-height: 1;
+}
+.deadline-date small {
+  font-size: 14px;
+  font-weight: 500;
+  color: #8f98b8;
+  text-transform: uppercase;
+}
+.deadline-info {
+  flex: 1;
+  min-width: 0;
+}
+.deadline-info h6 {
+  line-height: 1;
+  color: #10276d;
+  font-size: 19px;
+}
+.deadline-info p {
+  color: #8f98b8;
+  font-size: 17px;
+}

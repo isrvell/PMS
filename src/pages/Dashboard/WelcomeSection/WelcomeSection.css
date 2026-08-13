@@ -1,0 +1,21 @@
+.dashboard {
+  padding: 20px 32px;
+}
+.welcome-title {
+  margin: 0 0 8px;
+  font-size: 28px;
+  font-weight: 600;
+  color: #10276d;
+}
+.welcome-description {
+  margin: 0;
+  color: #9398bb;
+}
+.task-count,
+.deadline-count {
+  font-weight: 600;
+}
+.wave {
+  margin-left: 6px;
+  font-size: 30px;
+}

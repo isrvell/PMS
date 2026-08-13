@@ -1,0 +1,30 @@
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 32px;
+  background-color: #fff;
+  border-bottom: 1px solid #e5e7eb;
+}
+.topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.search-box {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 320px;
+  padding: 10px 16px;
+  background-color: #f8f9fc;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+}
+.search-box input {
+  flex: 1;
+  border: none;
+  outline: none;
+  background: transparent;
+  font-size: 15px;
+}

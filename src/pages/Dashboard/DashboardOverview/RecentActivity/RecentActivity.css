@@ -1,0 +1,21 @@
+.activity-title i {
+  color: #eb5348;
+  font-size: 20px;
+}
+.recent-activity {
+  color: #10276d;
+}
+
+.activity-info h6 {
+  line-height: 1;
+  color: #10276d;
+  font-size: 19px;
+}
+.activity-info p {
+  font-size: 18px;
+  color: #8f98b8;
+}
+.activity-time {
+  color: #8f98b8;
+  font-size: 14px;
+}

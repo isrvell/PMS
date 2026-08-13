@@ -1,0 +1,19 @@
+.user-menu-container {
+  position: relative;
+}
+.user-menu {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  background: none;
+  padding: 0;
+}
+.user-menu-toggle {
+  transition: transform 0.2s ease;
+}
+.user-menu-toggle.rotate {
+  transform: rotate(180deg);
+}
