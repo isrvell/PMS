@@ -1,0 +1,29 @@
+.project-filters {
+  margin-bottom: 24px;
+}
+.filter-item {
+  background: transparent;
+  border: 0;
+  padding: 0 0 8px;
+  font-size: 18px;
+  font-weight: 500;
+  color: #8f98b8;
+  position: relative;
+}
+.filter-item:hover {
+  color: #10276d;
+}
+.filter-item.active {
+  color: #10276d;
+  font-weight: 600;
+}
+.filter-item.active::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 2px;
+  background-color: #10276d;
+  border-radius: 2px;
+}

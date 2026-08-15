@@ -17,6 +17,7 @@ informed decisions and keep projects on track.
 - Consistent design system
 - Interactive project progress visualization
 - Designed with future backend integration in mind
+- Dynamic filtering with useState
 
 ---
 
@@ -55,7 +56,11 @@ The Dashboard is currently implemented and includes:
 
 ### Projects
 
-Coming soon.
+- Projects page with filterable project cards
+- Filter by status (All, Active, Completed, In Hold)
+- Each card displays name, description, date, status, progress bar, and members
+- Dynamic status badge with color indicator
+- Responsive card grid layout
 
 ### Team
 

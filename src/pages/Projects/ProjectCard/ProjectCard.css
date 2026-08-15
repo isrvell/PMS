@@ -1,0 +1,35 @@
+.project-card {
+  overflow: hidden;
+}
+.project-name {
+  color: #10276d;
+  font-size: 20px;
+  font-weight: 700;
+}
+.project-description {
+  color: #8f98b8;
+}
+.project-date {
+  color: #8f98b8;
+  font-size: 13px;
+}
+.project-status,
+.project-progress {
+  color: var(--status-color);
+  font-size: 13px;
+  font-weight: 600;
+}
+.project-card .progress {
+  height: 7px;
+  background-color: #eef1f7;
+  border-radius: 10px;
+}
+.project-card .progress-bar {
+  height: 7px;
+  background-color: var(--status-color);
+  border-radius: 10px;
+}
+.project-members {
+  color: #8f98b8;
+  font-size: 15px;
+}
