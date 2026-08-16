@@ -64,7 +64,11 @@ The Dashboard is currently implemented and includes:
 
 ### Team
 
-Coming soon.
+- Team page with filterable members cards
+- Filter by department (All, Frontend, Backend, Design)
+- Each card displays name, role, avatar, and availability status
+- Dynamic availability indicator available, Remote, On Leave
+- Responsive card grid layout
 
 ### Kanban Board
 

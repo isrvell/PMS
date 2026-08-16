@@ -3,6 +3,7 @@ import MainLayout from "../components/layout/MainLayout/MainLayout.jsx";
 
 import Dashboard from "../pages/Dashboard/Dashboard.jsx";
 import Projects from "../pages/Projects/Projects.jsx";
+import Team from "../pages/Team/Team.jsx";
 
 function AppRoutes() {
   return (
@@ -11,6 +12,7 @@ function AppRoutes() {
         <Route element={<MainLayout />}>
           <Route index element={<Dashboard />} />
           <Route path="/projects" element={<Projects />} />
+          <Route path="/team" element={<Team />} />
         </Route>
       </Routes>
     </BrowserRouter>

@@ -1,0 +1,20 @@
+.team-header h1 {
+  color: #10276d;
+  font-size: 38px;
+  font-weight: 700;
+}
+.filter-btn {
+  color: #10276d;
+  font-size: 18px;
+}
+.invit-btn {
+  background-color: #10276d;
+  color: #fff;
+  border-radius: 0.5rem;
+  padding: 9px 16px;
+  font-weight: 600;
+}
+.invit-btn:hover {
+  background-color: #0d205c;
+  color: #fff;
+}
