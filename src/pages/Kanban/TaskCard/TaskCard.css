@@ -1,0 +1,32 @@
+.task-card-header h5 {
+  color: #10276d;
+  font-size: 17px;
+  margin: 0;
+}
+.task-description {
+  color: #9398bb;
+  font-size: 14px;
+  margin: 0.75rem 0 1rem;
+}
+.task-due-date {
+  color: #9398bb;
+  font-size: 13px;
+}
+.task-card-member .avatar {
+  margin-right: -8px;
+  border: 2px solid #f5f5f5;
+}
+.task-card-member .avatar-more {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 25px;
+  height: 25px;
+  margin-right: -8px;
+  border: 2px solid #f5f5f5;
+  border-radius: 50%;
+  background-color: #f4f5fa;
+  color: #10276d;
+  font-size: 13px;
+  font-weight: 600;
+}

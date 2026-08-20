@@ -6,6 +6,8 @@ centralized view of all active projects, team workload, upcoming
 deadlines, and required actions — enabling managers to make
 informed decisions and keep projects on track.
 
+![Dashboard Wireframe](screenshot/preview/dashboard.png)
+
 ---
 
 ## Key Highlights
@@ -16,8 +18,10 @@ informed decisions and keep projects on track.
 - Responsive layout
 - Consistent design system
 - Interactive project progress visualization
-- Designed with future backend integration in mind
 - Dynamic filtering with useState
+- Drag-and-drop task management
+- Dynamic user avatar display
+- Designed with future backend integration in mind
 
 ---
 
@@ -72,15 +76,22 @@ The Dashboard is currently implemented and includes:
 
 ### Kanban Board
 
-Coming soon.
+- Kanban board with four workflow columns
+- Drag and drop tasks between columns
+- Reorder tasks within columns
+- Dynamic task status updates
+- Reusable Task Card and Kanban Column components
+- User avatar support
+- Displays up to two member avatars with remaining member count
+- Responsive Kanban layout
 
 ---
 
 ## Screenshots
 
-Screenshots will be added as the project pages are completed.
-
-> Coming soon.
+![Projects Wireframe](screenshot/preview/projects.png)
+![Team Wireframe](screenshot/preview/team.png)
+![kanban Wireframe](screenshot/preview/kanban.png)
 
 ---
 
@@ -89,18 +100,19 @@ Screenshots will be added as the project pages are completed.
 The interface is designed to be fully responsive across
 different screen sizes using Bootstrap's grid system.
 
-> Screenshots will be added upon project completion.
-
+<div style="display: flex; gap: 15px; align-items: stretch; width: 100%;">
+<img src="screenshot/responsive/dashboard1.png" style="height:700px;"> <img src="screenshot/responsive/projects1.png" style="height:700px;">
+<img src="screenshot/responsive/team1.png" style=" height:700px;" > <img src="screenshot/responsive/kanban1.png" style= "height:700px;">
+</div>
 ---
 
 ## Wireframe
 
 The UI was planned through wireframes before implementation to ensure consistency between the design and the final product.
-
-![Dashboard Wireframe](screenshot/wireframes/dashboard-wireframe.png)
-![Projects Wireframe](screenshot/wireframes/project-wireframe.png)
-![Team Wireframe](screenshot/wireframes/team-wireframe.png)
-![kanban Wireframe](screenshot/wireframes/kanban-wireframe.png)
+| | |
+|-----------|-------------|
+| <img src="screenshot/wireframes/dashboard-wireframe.png" width="800"> | <img src="screenshot/wireframes/project-wireframe.png" width="800"> |<br>
+| <img src="screenshot/wireframes/team-wireframe.png" width="800" > | <img src="screenshot/wireframes/kanban-wireframe.png" width="800"> |
 
 ---
 
@@ -111,6 +123,8 @@ The UI was planned through wireframes before implementation to ensure consistenc
 - Bootstrap 5
 - Bootstrap Icons
 - Nivo
+- @dnd-kit/react
+- @dnd-kit/helpers
 - Vite
 - Git & GitHub
 
@@ -135,7 +149,7 @@ Make sure you have Node.js and npm installed.
 Clone the repository:
 
 ```bash
-git clone
+git clone https://github.com/Mona96M/Project-Management-System.git
 ```
 
 Navigate to the project directory:

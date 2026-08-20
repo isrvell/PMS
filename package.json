@@ -10,6 +10,8 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@dnd-kit/helpers": "^0.5.0",
+    "@dnd-kit/react": "^0.5.0",
     "@nivo/pie": "^0.99.0",
     "bootstrap": "^5.3.8",
     "bootstrap-icons": "^1.13.1",

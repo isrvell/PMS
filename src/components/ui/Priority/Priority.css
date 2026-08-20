@@ -1,10 +1,10 @@
 .priority {
   display: inline-block;
-  min-width: 65px;
-  padding: 4px 10px;
+  min-width: 52px;
+  padding: 2px 8px;
   border-radius: 999px;
   text-align: center;
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 600;
 }
 .priority-high {

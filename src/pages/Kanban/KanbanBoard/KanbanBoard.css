@@ -1,0 +1,9 @@
+.kanban-board {
+  width: 100%;
+}
+.kanban-header {
+  color: #10276d;
+  font-size: 38px;
+  font-weight: 700;
+  margin-bottom: 28px;
+}

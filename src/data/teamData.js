@@ -6,7 +6,7 @@ export const teamData = [
     department: "frontend",
     availability: "available",
     availabilityStatus: "available",
-    avatar: "...",
+    avatar: "/assets/images/avatar/avatar2.png",
   },
   {
     id: 2,
@@ -15,7 +15,7 @@ export const teamData = [
     department: "backend",
     availability: "available",
     availabilityStatus: "available",
-    avatar: "...",
+    avatar: "/assets/images/avatar/avatar4.png",
   },
   {
     id: 3,
@@ -24,7 +24,7 @@ export const teamData = [
     department: "frontend",
     availability: "remote",
     availabilityStatus: "remote",
-    avatar: "...",
+    avatar: "/assets/images/avatar/avatar3.png",
   },
   {
     id: 4,
@@ -33,7 +33,7 @@ export const teamData = [
     department: "frontend",
     availability: "on leave",
     availabilityStatus: "on leave",
-    avatar: "...",
+    avatar: "/assets/images/avatar/avatar1.png",
   },
   {
     id: 5,
@@ -42,7 +42,7 @@ export const teamData = [
     department: "design",
     availability: "available",
     availabilityStatus: "available",
-    avatar: "...",
+    avatar: "/assets/images/avatar/avatar5.png",
   },
   {
     id: 6,
@@ -51,7 +51,7 @@ export const teamData = [
     department: "design",
     availability: "remote",
     availabilityStatus: "remote",
-    avatar: "...",
+    avatar: "/assets/images/avatar/avatar6.png",
   },
   {
     id: 7,
@@ -60,7 +60,7 @@ export const teamData = [
     department: "backend",
     availability: "on leave",
     availabilityStatus: "on leave",
-    avatar: "...",
+    avatar: "/assets/images/avatar/avatar7.png",
   },
 ];
 export const teamAvailability = {
