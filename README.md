@@ -99,11 +99,11 @@ The Dashboard is currently implemented and includes:
 
 The interface is designed to be fully responsive across
 different screen sizes using Bootstrap's grid system.
+| | |
+|-----------|-------------|
+|<img src="screenshot/responsive/dashboard.png" style="height:700px;">| <img src="screenshot/responsive/projects.png" style="height:700px;">|<br>
+|<img src="screenshot/responsive/team.png" style=" height:700px;" > |<img src="screenshot/responsive/kanban.png" style= "height:700px;">|
 
-<div style="display: flex; gap: 15px; align-items: stretch; width: 100%;">
-<img src="screenshot/responsive/dashboard1.png" style="height:700px;"> <img src="screenshot/responsive/projects1.png" style="height:700px;">
-<img src="screenshot/responsive/team1.png" style=" height:700px;" > <img src="screenshot/responsive/kanban1.png" style= "height:700px;">
-</div>
 ---
 
 ## Wireframe
