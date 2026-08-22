@@ -131,11 +131,46 @@ The UI was planned through wireframes before implementation to ensure consistenc
 ---
 
 ## Project Structure
-
-The project structure is currently under development and will be documented in detail after the main pages and reusable components are completed.
-
-> Under development.
-
+```
+src/
+├── assets/
+│   └── style/
+│
+├── components/
+│   ├── layout/
+│   │   ├── MainLayout/
+│   │   ├── Sidebar/
+│   │   └── Topbar/
+│   │
+│   └── ui/
+│       ├── Avatar/
+│       ├── Badge/
+│       └── Priority/
+│
+├── data/
+│   ├── actionRequiredData.js
+│   ├── deadlinesData.js
+│   ├── kanbanData.js
+│   ├── projectProgressData.js
+│   ├── projectsData.js
+│   ├── recentActivityData.js
+│   ├── sidebarMenu.js
+│   ├── statsData.js
+│   ├── teamData.js
+│   └── welcomeData.js
+│
+├── pages/
+│   ├── Dashboard/
+│   ├── Projects/
+│   ├── Team/
+│   └── Kanban/
+│
+├── routes/
+│   └── AppRoutes.jsx
+│
+├── App.jsx
+└── main.jsx
+```
 ---
 
 ## Getting Started
