@@ -1,9 +1,10 @@
 import "./TeamMemberCard.css";
 
-import { teamAvailability } from "../../../data/teamData.js";
+import { useTranslatedStatuses } from "../../../constants/statuses.js";
 import Avatar from "../../../components/ui/Avatar/Avatar.jsx";
 
 function TeamMemberCard({ name, role, avatar, availability }) {
+  const { teamAvailability } = useTranslatedStatuses();
   const status = teamAvailability[availability];
 
   return (

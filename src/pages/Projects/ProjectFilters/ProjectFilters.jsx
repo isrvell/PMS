@@ -1,23 +1,16 @@
 import "./ProjectFilters.css";
-const filters = [
-  {
-    id: "all",
-    label: "All",
-  },
-  {
-    id: "completed",
-    label: "Completed",
-  },
-  {
-    id: "active",
-    label: "Active",
-  },
-  {
-    id: "in-hold",
-    label: "In Hold",
-  },
-];
+import { useLanguage } from "../../../context/LanguageContext.jsx";
+
 function ProjectFilters({ activeFilter, onFilterChange }) {
+  const { t } = useLanguage();
+
+  const filters = [
+    { id: "all", label: t("all") },
+    { id: "completed", label: t("completed") },
+    { id: "active", label: t("active") },
+    { id: "in-hold", label: t("inHold") },
+  ];
+
   return (
     <nav className="project-filters" aria-label="Project filters">
       <div className="d-flex gap-4">

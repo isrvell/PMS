@@ -1,44 +1,50 @@
 import "./ProjectProgress.css";
 import { ResponsivePie } from "@nivo/pie";
+import { useLanguage } from "../../../../context/LanguageContext.jsx";
+
 function ProjectProgress({ data }) {
+  const { t } = useLanguage();
+
+  const labelMap = {
+    "In Progress": t("inProgress"),
+    "Completed": t("completed"),
+    "Pending": t("pending"),
+  };
+
   return (
-    <section className="project-progress shadow-sm rounded-3 p-3 h-100">
-      <div className="project-progress-title d-flex gap-2">
-        <i className="bi bi-graph-up-arrow"></i>
-        <h4 className="mb-4">Project Progress</h4>
-      </div>
-      <div className="project-progress-chart">
-        <ResponsivePie
-          data={data}
-          innerRadius={0.6}
-          padAngle={1}
-          cornerRadius={4}
-          colors={{ datum: "data.color" }}
-          enableArcLinkLabels={false}
-          enableArcLabels={false}
-          activeOuterRadiusOffset={8}
-          animate={true}
-          motionConfig="gentle"
-          margin={{ top: 10, right: 10, bottom: 10, left: 10 }}
-          // Tooltip
-          tooltip={({ datum }) => (
-            <div className="chart-tooltip">
-              <strong>{datum.id}</strong>
-              <span>{datum.value}%</span>
+    <section className="dash-card progress-card">
+      <h3 className="dash-card-title">{t("projectStatus")}</h3>
+      <div className="progress-layout">
+        <div className="progress-chart-wrapper">
+          <ResponsivePie
+            data={data}
+            innerRadius={0.7}
+            padAngle={2}
+            cornerRadius={6}
+            colors={{ datum: "data.color" }}
+            enableArcLinkLabels={false}
+            enableArcLabels={false}
+            activeOuterRadiusOffset={4}
+            animate={true}
+            motionConfig="gentle"
+            margin={{ top: 8, right: 8, bottom: 8, left: 8 }}
+            tooltip={({ datum }) => (
+              <div className="chart-tooltip">
+                <strong>{labelMap[datum.id] || datum.id}</strong>
+                <span>{datum.value}%</span>
+              </div>
+            )}
+          />
+        </div>
+        <div className="progress-legend">
+          {data.map((item) => (
+            <div className="progress-legend-item" key={item.id}>
+              <span className="legend-dot" style={{ backgroundColor: item.color }}></span>
+              <span className="legend-label">{labelMap[item.id] || item.id}</span>
+              <span className="legend-value">{item.value}%</span>
             </div>
-          )}
-        />
-      </div>
-      <div className="project-progress-legend">
-        {data.map((item) => (
-          <div className="project-progress-legend-item" key={item.id}>
-            <span
-              className="legend-dot"
-              style={{ backgroundColor: item.color }}
-            ></span>
-            <span className="legend-label">{item.id}</span>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
     </section>
   );

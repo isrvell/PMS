@@ -1,16 +1,38 @@
-.actions h4 {
-  color: #10276d;
+.action-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 }
-.actions-title i {
-  color: #eb5348;
-  font-size: 20px;
+
+.action-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 14px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--color-border);
+  transition: background var(--transition-fast);
 }
-.actions-title {
-  color: #10276d;
-  font-size: 17px;
-  overflow-wrap: anywhere;
+
+.action-row:hover {
+  background: var(--color-surface-hover);
 }
-.action-dueDate {
-  color: #8f98b8;
-  font-size: 15px;
+
+.action-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.action-name {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text);
+}
+
+.action-due {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
 }

@@ -2,20 +2,20 @@
   display: inline-block;
   min-width: 52px;
   padding: 2px 8px;
-  border-radius: 999px;
+  border-radius: var(--radius-full);
   text-align: center;
-  font-size: 13px;
-  font-weight: 600;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
 }
 .priority-high {
-  background-color: #f9d8d5;
-  color: #d9534f;
+  background-color: var(--color-text);
+  color: var(--color-bg);
 }
 .priority-medium {
-  background-color: #f7eedc;
-  color: #c58a25;
+  background-color: var(--color-border);
+  color: var(--color-text);
 }
 .priority-low {
-  background-color: #e8ebf5;
-  color: #10276d;
+  background-color: var(--color-surface-hover);
+  color: var(--color-text-muted);
 }

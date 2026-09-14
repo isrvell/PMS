@@ -1,27 +1,36 @@
 .project-card {
   overflow: hidden;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast), border-color var(--transition-fast);
+}
+
+.project-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+  border-color: var(--color-text-muted);
 }
 .project-name {
-  color: #10276d;
-  font-size: 20px;
-  font-weight: 700;
+  color: var(--color-text);
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
 }
 .project-description {
-  color: #8f98b8;
+  color: var(--color-text-secondary);
 }
 .project-date {
-  color: #8f98b8;
-  font-size: 13px;
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
 }
 .project-status,
 .project-progress {
   color: var(--status-color);
-  font-size: 13px;
-  font-weight: 600;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
 }
 .project-card .progress {
   height: 7px;
-  background-color: #eef1f7;
+  background-color: var(--color-border-light);
   border-radius: 10px;
 }
 .project-card .progress-bar {
@@ -30,6 +39,6 @@
   border-radius: 10px;
 }
 .project-members {
-  color: #8f98b8;
-  font-size: 15px;
+  color: var(--color-text-muted);
+  font-size: var(--font-size-base);
 }

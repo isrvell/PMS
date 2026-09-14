@@ -1,23 +1,15 @@
-const filters = [
-  {
-    id: "all",
-    label: "All",
-  },
-  {
-    id: "frontend",
-    label: "Frontend",
-  },
-  {
-    id: "backend",
-    label: "Backend",
-  },
-  {
-    id: "design",
-    label: "Design",
-  },
-];
+import { useLanguage } from "../../../context/LanguageContext.jsx";
 
 function TeamFilters({ activeFilter, onFilterChange }) {
+  const { t } = useLanguage();
+
+  const filters = [
+    { id: "all", label: t("all") },
+    { id: "frontend", label: t("frontend") },
+    { id: "backend", label: t("backend") },
+    { id: "design", label: t("design") },
+  ];
+
   return (
     <nav className="team-filters" aria-label="Team filters">
       <div className="d-flex gap-4">

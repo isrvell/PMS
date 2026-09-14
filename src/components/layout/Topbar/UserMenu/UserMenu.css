@@ -12,6 +12,7 @@
   padding: 0;
 }
 .user-menu-toggle {
+  color: var(--color-text-muted);
   transition: transform 0.2s ease;
 }
 .user-menu-toggle.rotate {

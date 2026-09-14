@@ -1,25 +1,24 @@
 .kanban-column {
   min-height: 600px;
-
-  background-color: #f4f5fa;
+  background-color: var(--color-surface-hover);
 }
 .kanban-column-header h4 {
-  color: #10276d;
-  font-size: 17px;
+  color: var(--color-text);
+  font-size: var(--font-size-md);
   margin: 0;
-  border-left: 3px solid #10276d;
+  border-left: 3px solid var(--color-primary);
   padding-left: 12px;
 }
 
 .kanban-task-count {
-  color: #fff;
-  background-color: #9398bb;
+  color: var(--color-bg);
+  background-color: var(--color-text-muted);
   border-radius: 50%;
   min-width: 20px;
   height: 20px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 13px;
-  font-weight: 600;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
 }

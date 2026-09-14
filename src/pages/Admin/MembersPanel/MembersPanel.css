@@ -1,0 +1,78 @@
+.member-row {
+  background: var(--color-surface);
+  transition: box-shadow var(--transition-fast);
+}
+
+.member-row:hover {
+  box-shadow: var(--shadow-md) !important;
+}
+
+.member-name {
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text);
+  margin: 0;
+}
+
+.member-email {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+}
+
+.role-badge {
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  padding: 4px 12px;
+  border-radius: var(--radius-full);
+  white-space: nowrap;
+}
+
+.role-admin {
+  background: var(--color-primary-light);
+  color: var(--color-primary);
+}
+
+.role-member {
+  background: var(--color-surface-hover);
+  color: var(--color-text-muted);
+}
+
+.role-select {
+  width: auto;
+  min-width: 110px;
+  border-radius: var(--radius-sm);
+  font-size: var(--font-size-sm);
+  background: var(--color-surface);
+  color: var(--color-text);
+  border-color: var(--color-border);
+}
+
+.remove-btn {
+  color: var(--color-accent);
+  border: 1px solid var(--color-accent);
+  border-radius: var(--radius-sm);
+  transition: all var(--transition-fast);
+}
+
+.remove-btn:hover {
+  background: var(--color-accent);
+  color: var(--color-bg);
+}
+
+.members-count {
+  font-size: var(--font-size-base);
+}
+
+@media (max-width: 768px) {
+  .member-row .d-flex {
+    flex-direction: column;
+    align-items: flex-start !important;
+    gap: 10px !important;
+  }
+  .member-actions {
+    width: 100%;
+  }
+  .member-actions .role-select {
+    flex: 1;
+  }
+}

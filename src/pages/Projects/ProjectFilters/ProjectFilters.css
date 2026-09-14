@@ -5,17 +5,17 @@
   background: transparent;
   border: 0;
   padding: 0 0 8px;
-  font-size: 18px;
-  font-weight: 500;
-  color: #8f98b8;
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-muted);
   position: relative;
 }
 .filter-item:hover {
-  color: #10276d;
+  color: var(--color-primary);
 }
 .filter-item.active {
-  color: #10276d;
-  font-weight: 600;
+  color: var(--color-primary);
+  font-weight: var(--font-weight-semibold);
 }
 .filter-item.active::after {
   content: "";
@@ -24,6 +24,6 @@
   right: 0;
   bottom: 0;
   height: 2px;
-  background-color: #10276d;
+  background-color: var(--color-primary);
   border-radius: 2px;
 }

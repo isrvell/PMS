@@ -3,8 +3,8 @@
   align-items: center;
   justify-content: center;
   font-size: 10px;
-  background-color: #eb5348;
-  color: #fff;
+  background-color: var(--color-accent);
+  color: var(--color-bg);
   width: 18px;
   height: 18px;
   right: 0;

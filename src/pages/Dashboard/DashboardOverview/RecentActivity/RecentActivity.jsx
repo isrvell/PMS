@@ -1,26 +1,29 @@
-import ActivityItem from "./ActivityItem";
-import { Fragment } from "react";
-import { recentActivityData } from "../../../../data/recentActivityData";
-function RecentActivity() {
+import Avatar from "../../../../components/ui/Avatar/Avatar";
+import { useLanguage } from "../../../../context/LanguageContext.jsx";
+import "./RecentActivity.css";
+
+function RecentActivity({ activities }) {
+  const { t } = useLanguage();
   return (
-    <section className="recent-activity shadow-sm rounded-3 p-3 h-100">
-      <div className="activity-title d-flex gap-2">
-        <i className="bi bi-activity"></i>
-        <h4 className="mb-4">Recent Activity</h4>
-      </div>
-      <div className="activity-list">
-        {recentActivityData.slice(0, 2).map((activity, index) => (
-          <Fragment key={activity.id}>
-            <ActivityItem
-              userName={activity.userName}
-              userImage={activity.userImage}
-              action={activity.action}
-              time={activity.time}
-            />
-            {index < 1 && <div className="divider"></div>}
-          </Fragment>
-        ))}
-      </div>
+    <section className="dash-card">
+      <h3 className="dash-card-title">{t("recentActivity")}</h3>
+      {(!activities || activities.length === 0) ? (
+        <p className="dash-empty">{t("noRecentActivity")}</p>
+      ) : (
+        <div className="activity-list">
+          {activities.slice(0, 5).map((a) => (
+            <div key={a.id} className="activity-row">
+              <Avatar size={32} src={a.userImage} name={a.userName} />
+              <div className="activity-body">
+                <span className="activity-text">
+                  <strong>{a.userName}</strong> {a.action}
+                </span>
+                <span className="activity-time">{a.time}</span>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
     </section>
   );
 }

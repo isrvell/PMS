@@ -1,12 +1,14 @@
 import Avatar from "../../../ui/Avatar/Avatar";
 import UserInfo from "./UserInfo";
 import UserMenuToggle from "./UserMenuToggle";
+import { useAuth } from "../../../../context/AuthContext.jsx";
 
 import "./UserMenu.css";
 import { useEffect, useRef, useState } from "react";
 import UserDropdown from "./UserDropdown";
 
 function UserMenu() {
+  const { user } = useAuth();
   const [isOpen, setIsOpen] = useState(false);
   const menuRef = useRef();
 
@@ -25,7 +27,7 @@ function UserMenu() {
   return (
     <div className="user-menu-container" ref={menuRef}>
       <button className="user-menu" onClick={() => setIsOpen(!isOpen)}>
-        <Avatar size={40} />
+        <Avatar size={40} src={user?.avatar} name={user?.name} />
         <UserInfo />
         <UserMenuToggle isOpen={isOpen} />
       </button>

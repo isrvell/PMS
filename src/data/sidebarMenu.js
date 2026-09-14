@@ -29,4 +29,17 @@ export const sidebarMenu = [
     path: "/reports",
     icon: "bi bi-bar-chart",
   },
+  {
+    id: 6,
+    title: "Calendar",
+    path: "/calendar",
+    icon: "bi bi-calendar3",
+  },
+  {
+    id: 7,
+    title: "Admin",
+    path: "/admin",
+    icon: "bi bi-gear",
+    adminOnly: true,
+  },
 ];
