@@ -7,7 +7,8 @@ const sendEmail = async ({ to, subject, html }) => {
   if (env.SMTP_USER && env.SMTP_PASS) {
     transporter = nodemailer.createTransport({
       host: env.SMTP_HOST,
-      port: env.SMTP_PORT,
+      port: Number(env.SMTP_PORT),
+      secure: Number(env.SMTP_PORT) === 465,
       auth: { user: env.SMTP_USER, pass: env.SMTP_PASS },
     });
   } else {
@@ -20,7 +21,7 @@ const sendEmail = async ({ to, subject, html }) => {
   }
 
   const info = await transporter.sendMail({
-    from: '"PMS Enterprise" <noreply@pms.com>',
+    from: `"PMS Enterprise" <${env.SMTP_USER || "noreply@pms.com"}>`,
     to,
     subject,
     html,
