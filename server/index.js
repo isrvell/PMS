@@ -52,6 +52,35 @@ app.get("/api/health", (req, res) => {
   res.json({ status: "ok", timestamp: new Date().toISOString() });
 });
 
+// SMTP diagnostic endpoint
+app.get("/api/smtp-check", async (req, res) => {
+  const config = {
+    SMTP_HOST: env.SMTP_HOST || "NOT SET",
+    SMTP_PORT: env.SMTP_PORT || "NOT SET",
+    SMTP_USER: env.SMTP_USER ? `${env.SMTP_USER.slice(0, 4)}...` : "NOT SET",
+    SMTP_PASS: env.SMTP_PASS ? "SET (hidden)" : "NOT SET",
+    CLIENT_URL: env.CLIENT_URL || "NOT SET",
+  };
+
+  if (!env.SMTP_USER || !env.SMTP_PASS) {
+    return res.json({ status: "misconfigured", config, message: "SMTP credentials missing" });
+  }
+
+  try {
+    const nodemailer = (await import("nodemailer")).default;
+    const transporter = nodemailer.createTransport({
+      host: env.SMTP_HOST,
+      port: Number(env.SMTP_PORT),
+      secure: Number(env.SMTP_PORT) === 465,
+      auth: { user: env.SMTP_USER, pass: env.SMTP_PASS },
+    });
+    await transporter.verify();
+    res.json({ status: "ok", config, message: "SMTP connection verified" });
+  } catch (err) {
+    res.json({ status: "error", config, message: err.message });
+  }
+});
+
 app.use("/api/auth", authRoutes);
 app.use("/api/workspaces", workspaceRoutes);
 app.use("/api/workspaces/:workspaceId/projects", projectRoutes);
