@@ -13,7 +13,7 @@ import {
 import "./Chat.css";
 
 function Chat() {
-  const { currentWorkspace } = useWorkspace();
+  const { workspaceId } = useWorkspace();
   const { user } = useAuth();
   const { t } = useLanguage();
 
@@ -31,6 +31,8 @@ function Chat() {
   const [showModal, setShowModal] = useState(false);
   const [newChannelName, setNewChannelName] = useState("");
   const [newChannelDesc, setNewChannelDesc] = useState("");
+  const [isCreating, setIsCreating] = useState(false);
+  const [modalError, setModalError] = useState("");
 
   const socketRef = useRef(null);
   const messagesEndRef = useRef(null);
@@ -78,15 +80,16 @@ function Chat() {
     };
   }, [user]);
 
-  // 2. Fetch channels when current workspace changes
+  // 2. Fetch channels when workspaceId changes
   useEffect(() => {
-    if (!currentWorkspace) return;
+    if (!workspaceId) return;
     loadChannelsData();
-  }, [currentWorkspace]);
+  }, [workspaceId]);
 
   const loadChannelsData = async () => {
+    if (!workspaceId) return;
     try {
-      const data = await getChannels(currentWorkspace.id);
+      const data = await getChannels(workspaceId);
       setChannels(data.channels || []);
       setDirectChannels(data.directChannels || []);
       setWorkspaceMembers(data.workspaceMembers || []);
@@ -102,6 +105,7 @@ function Chat() {
 
   // 3. Handle Selecting a Channel
   const selectChannel = async (channel) => {
+    if (!channel || !workspaceId) return;
     if (activeChannel && socketRef.current) {
       socketRef.current.emit("leave_channel", activeChannel.id);
     }
@@ -114,7 +118,7 @@ function Chat() {
     }
 
     try {
-      const history = await getChannelMessages(currentWorkspace.id, channel.id);
+      const history = await getChannelMessages(workspaceId, channel.id);
       setMessages(history || []);
     } catch (err) {
       console.error("Failed to fetch channel messages", err);
@@ -153,13 +157,13 @@ function Chat() {
   // Handle sending a message
   const handleSendMessage = async (e) => {
     e?.preventDefault();
-    if (!messageText.trim() || !activeChannel) return;
+    if (!messageText.trim() || !activeChannel || !workspaceId) return;
 
     const content = messageText.trim();
     setMessageText("");
 
     try {
-      const sentMsg = await sendChannelMessage(currentWorkspace.id, activeChannel.id, { content });
+      const sentMsg = await sendChannelMessage(workspaceId, activeChannel.id, { content });
       setMessages((prev) => (prev.some((m) => m.id === sentMsg.id) ? prev : [...prev, sentMsg]));
 
       if (socketRef.current) {
@@ -177,8 +181,9 @@ function Chat() {
 
   // Start Direct Message with a workspace member
   const handleStartDM = async (targetUser) => {
+    if (!workspaceId) return;
     try {
-      const dmChannel = await getOrCreateDirectChannel(currentWorkspace.id, targetUser.id);
+      const dmChannel = await getOrCreateDirectChannel(workspaceId, targetUser.id);
       await loadChannelsData();
       selectChannel(dmChannel);
     } catch (err) {
@@ -189,10 +194,13 @@ function Chat() {
   // Handle Create Channel
   const handleCreateChannelSubmit = async (e) => {
     e.preventDefault();
-    if (!newChannelName.trim()) return;
+    if (!newChannelName.trim() || !workspaceId) return;
+
+    setModalError("");
+    setIsCreating(true);
 
     try {
-      const created = await createChannel(currentWorkspace.id, {
+      const created = await createChannel(workspaceId, {
         name: newChannelName,
         description: newChannelDesc,
       });
@@ -200,9 +208,12 @@ function Chat() {
       setNewChannelDesc("");
       setShowModal(false);
       await loadChannelsData();
-      selectChannel(created);
+      if (created) selectChannel(created);
     } catch (err) {
       console.error("Failed to create channel", err);
+      setModalError(err.message || "Failed to create channel");
+    } finally {
+      setIsCreating(false);
     }
   };
 
@@ -237,7 +248,10 @@ function Chat() {
             </h2>
             <button
               className="chat-add-btn"
-              onClick={() => setShowModal(true)}
+              onClick={() => {
+                setModalError("");
+                setShowModal(true);
+              }}
               title={t("newChannel")}
             >
               <i className="bi bi-plus-lg"></i>
@@ -338,7 +352,7 @@ function Chat() {
                 </div>
               ) : (
                 messages.map((msg) => {
-                  const isMine = msg.senderId === user.id;
+                  const isMine = msg.senderId === user?.id;
                   const senderName = msg.sender?.name || "Utilisateur";
                   const timeStr = new Date(msg.createdAt).toLocaleTimeString([], {
                     hour: "2-digit",
@@ -415,11 +429,18 @@ function Chat() {
                 <button
                   type="button"
                   className="btn-close"
-                  onClick={() => setShowModal(false)}
+                  onClick={() => {
+                    setShowModal(false);
+                    setModalError("");
+                  }}
+                  disabled={isCreating}
                 ></button>
               </div>
               <form onSubmit={handleCreateChannelSubmit}>
                 <div className="modal-body">
+                  {modalError && (
+                    <div className="alert alert-danger py-2">{modalError}</div>
+                  )}
                   <div className="mb-3">
                     <label className="form-label">{t("channelName")}</label>
                     <input
@@ -429,6 +450,7 @@ function Chat() {
                       value={newChannelName}
                       onChange={(e) => setNewChannelName(e.target.value)}
                       required
+                      disabled={isCreating}
                     />
                   </div>
                   <div className="mb-3">
@@ -439,6 +461,7 @@ function Chat() {
                       placeholder="Objectif de ce canal..."
                       value={newChannelDesc}
                       onChange={(e) => setNewChannelDesc(e.target.value)}
+                      disabled={isCreating}
                     />
                   </div>
                 </div>
@@ -446,12 +469,23 @@ function Chat() {
                   <button
                     type="button"
                     className="btn btn-secondary"
-                    onClick={() => setShowModal(false)}
+                    onClick={() => {
+                      setShowModal(false);
+                      setModalError("");
+                    }}
+                    disabled={isCreating}
                   >
                     {t("cancel")}
                   </button>
-                  <button type="submit" className="btn btn-primary">
-                    {t("create")}
+                  <button type="submit" className="btn btn-primary" disabled={isCreating || !newChannelName.trim()}>
+                    {isCreating ? (
+                      <>
+                        <span className="spinner-border spinner-border-sm me-2" role="status"></span>
+                        {t("loading")}
+                      </>
+                    ) : (
+                      t("create")
+                    )}
                   </button>
                 </div>
               </form>
