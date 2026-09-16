@@ -23,6 +23,7 @@ function InvitationsPanel() {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [actionId, setActionId] = useState(null);
+  const [copiedId, setCopiedId] = useState(null);
 
   const handleInvite = async (e) => {
     e.preventDefault();
@@ -30,8 +31,14 @@ function InvitationsPanel() {
     setSuccess("");
     setSending(true);
     try {
-      await createInvitation(workspaceId, email, role);
-      setSuccess(`Invitation sent to ${email}`);
+      const result = await createInvitation(workspaceId, email, role);
+      if (result.emailSent) {
+        setSuccess(`Invitation sent to ${email}`);
+      } else {
+        setSuccess(
+          `Invitation created for ${email} — email couldn't be delivered. Use the copy link button to share manually.`
+        );
+      }
       setEmail("");
       setRole("member");
       refetch();
@@ -39,6 +46,24 @@ function InvitationsPanel() {
       setError(err.message);
     } finally {
       setSending(false);
+    }
+  };
+
+  const handleCopyLink = async (inviteUrl, id) => {
+    try {
+      await navigator.clipboard.writeText(inviteUrl);
+      setCopiedId(id);
+      setTimeout(() => setCopiedId(null), 2000);
+    } catch {
+      // Fallback for older browsers
+      const textArea = document.createElement("textarea");
+      textArea.value = inviteUrl;
+      document.body.appendChild(textArea);
+      textArea.select();
+      document.execCommand("copy");
+      document.body.removeChild(textArea);
+      setCopiedId(id);
+      setTimeout(() => setCopiedId(null), 2000);
     }
   };
 
@@ -68,7 +93,7 @@ function InvitationsPanel() {
 
   const statusColors = {
     pending: { bg: "#F0F0F0", color: "#555555" },
-    accepted: { bg: "#E0E0E0", color: "#111111" },
+    accepted: { bg: "#d4edda", color: "#155724" },
     expired: { bg: "#F5F5F5", color: "#999999" },
     revoked: { bg: "#E8E8E8", color: "#444444" },
   };
@@ -135,13 +160,13 @@ function InvitationsPanel() {
           {invitations.map((inv) => {
             const sc = statusColors[inv.status] || statusColors.pending;
             return (
-              <div key={inv._id} className="inv-row shadow-sm rounded-3 p-3 mb-3">
+              <div key={inv.id} className="inv-row shadow-sm rounded-3 p-3 mb-3">
                 <div className="d-flex align-items-center gap-3 flex-wrap">
                   <div className="inv-info flex-grow-1">
                     <span className="inv-email">{inv.email}</span>
                     <span className="inv-meta">
                       {inv.role} &middot; {new Date(inv.createdAt).toLocaleDateString()}
-                      {inv.invitedBy && ` &middot; by ${inv.invitedBy.name}`}
+                      {inv.invitedBy && ` \u00B7 by ${inv.invitedBy.name}`}
                     </span>
                   </div>
                   <span
@@ -153,17 +178,24 @@ function InvitationsPanel() {
                   {inv.status === "pending" && (
                     <div className="d-flex gap-2">
                       <button
+                        className="btn btn-sm inv-copy-btn"
+                        onClick={() => handleCopyLink(inv.inviteUrl, inv.id)}
+                        title={copiedId === inv.id ? "Copied!" : "Copy invite link"}
+                      >
+                        <i className={`bi ${copiedId === inv.id ? "bi-check-lg text-success" : "bi-link-45deg"}`}></i>
+                      </button>
+                      <button
                         className="btn btn-sm inv-action-btn"
-                        onClick={() => handleResend(inv._id)}
-                        disabled={actionId === inv._id}
+                        onClick={() => handleResend(inv.id)}
+                        disabled={actionId === inv.id}
                         title="Resend invitation"
                       >
                         <i className="bi bi-arrow-clockwise"></i>
                       </button>
                       <button
                         className="btn btn-sm inv-revoke-btn"
-                        onClick={() => handleRevoke(inv._id)}
-                        disabled={actionId === inv._id}
+                        onClick={() => handleRevoke(inv.id)}
+                        disabled={actionId === inv.id}
                         title="Revoke invitation"
                       >
                         <i className="bi bi-x-circle"></i>

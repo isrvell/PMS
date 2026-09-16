@@ -35,7 +35,9 @@ export const createInvitation = async (req, res, next) => {
     });
 
     const inviteUrl = `${env.CLIENT_URL}/invite/${token}`;
-    await sendEmail({
+
+    // Try to send email (non-blocking — invitation is created regardless)
+    const emailResult = await sendEmail({
       to: email,
       subject: `You've been invited to ${req.workspace.name}`,
       html: `
@@ -55,7 +57,11 @@ export const createInvitation = async (req, res, next) => {
       entityId: invitation.id,
     });
 
-    res.status(201).json(invitation);
+    const response = invitation.toJSON();
+    response.inviteUrl = inviteUrl;
+    response.emailSent = emailResult.sent !== false;
+
+    res.status(201).json(response);
   } catch (error) {
     next(error);
   }
@@ -68,7 +74,15 @@ export const getInvitations = async (req, res, next) => {
       include: [{ model: User, as: "invitedBy", attributes: ["id", "name", "email"] }],
       order: [["createdAt", "DESC"]],
     });
-    res.json(invitations);
+
+    // Add invite URLs
+    const result = invitations.map((inv) => {
+      const data = inv.toJSON();
+      data.inviteUrl = `${env.CLIENT_URL}/invite/${inv.token}`;
+      return data;
+    });
+
+    res.json(result);
   } catch (error) {
     next(error);
   }
@@ -100,7 +114,7 @@ export const resendInvitation = async (req, res, next) => {
     await invitation.save();
 
     const inviteUrl = `${env.CLIENT_URL}/invite/${invitation.token}`;
-    await sendEmail({
+    const emailResult = await sendEmail({
       to: invitation.email,
       subject: `Reminder: You've been invited to ${req.workspace.name}`,
       html: `
@@ -111,7 +125,7 @@ export const resendInvitation = async (req, res, next) => {
       `,
     });
 
-    res.json({ message: "Invitation resent" });
+    res.json({ message: "Invitation resent", inviteUrl, emailSent: emailResult.sent !== false });
   } catch (error) {
     next(error);
   }
