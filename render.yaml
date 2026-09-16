@@ -1,3 +1,9 @@
+databases:
+  - name: pms-db
+    plan: free
+    databaseName: pms
+    user: pms_user
+
 services:
   - type: web
     name: pms
@@ -10,10 +16,16 @@ services:
         value: production
       - key: PORT
         value: 5000
+      - key: DATABASE_URL
+        fromDatabase:
+          name: pms-db
+          property: connectionString
       - key: JWT_SECRET
         generateValue: true
       - key: JWT_EXPIRES_IN
         value: 7d
+      - key: RESEND_API_KEY
+        sync: false
       - key: CLIENT_URL
         sync: false
       - key: SMTP_HOST

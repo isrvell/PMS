@@ -6,7 +6,7 @@ const TeamMember = sequelize.define("TeamMember", {
   workspaceId: { type: DataTypes.UUID, allowNull: false },
   userId: { type: DataTypes.UUID, allowNull: false },
   role: { type: DataTypes.STRING, allowNull: false },
-  department: { type: DataTypes.ENUM("frontend", "backend", "design"), allowNull: false },
+  department: { type: DataTypes.STRING, allowNull: false },
   availability: { type: DataTypes.ENUM("available", "remote", "on leave"), defaultValue: "available" },
 }, { timestamps: true });
 

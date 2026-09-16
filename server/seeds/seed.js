@@ -8,8 +8,28 @@ import env from "../config/env.js";
 async function seed() {
   try {
     await connectDB();
-    await sequelize.sync({ force: true });
-    console.log("Database synced and reset.");
+
+    // In production (PostgreSQL), only sync without force to preserve data
+    // Use force only if DB is empty (first deploy)
+    const dialect = sequelize.getDialect();
+
+    if (dialect === "postgres") {
+      await sequelize.sync();
+
+      // Check if admin already exists — skip seed if so
+      const existingAdmin = await User.findOne({ where: { email: env.ADMIN_EMAIL || "admin@pms.com" } });
+      if (existingAdmin) {
+        console.log("✅ Database already seeded — skipping.");
+        await sequelize.close();
+        return;
+      }
+
+      console.log("🌱 First deploy — seeding PostgreSQL...");
+    } else {
+      // SQLite: reset every time (dev mode)
+      await sequelize.sync({ force: true });
+      console.log("Database synced and reset (SQLite).");
+    }
 
     // 1. Create Admin User
     const admin = await User.create({
