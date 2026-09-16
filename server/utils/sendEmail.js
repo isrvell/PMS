@@ -1,45 +1,52 @@
+import { Resend } from "resend";
 import nodemailer from "nodemailer";
 import env from "../config/env.js";
 
 const sendEmail = async ({ to, subject, html }) => {
-  if (!env.SMTP_USER || !env.SMTP_PASS) {
-    console.warn("⚠️  SMTP not configured — SMTP_USER or SMTP_PASS missing. Email NOT sent to:", to);
-    return { skipped: true, reason: "SMTP not configured" };
-  }
+  // Priority 1: Resend API (works on all hosting platforms)
+  if (env.RESEND_API_KEY) {
+    console.log(`📧 Sending email to ${to} via Resend API...`);
+    const resend = new Resend(env.RESEND_API_KEY);
+    const { data, error } = await resend.emails.send({
+      from: env.RESEND_FROM || "PMS Enterprise <onboarding@resend.dev>",
+      to,
+      subject,
+      html,
+    });
 
-  console.log(`📧 Sending email to ${to} via ${env.SMTP_HOST}:${env.SMTP_PORT}...`);
-
-  // Try primary port first, fallback to 465 SSL if timeout
-  const ports = [Number(env.SMTP_PORT), 465];
-  let lastError;
-
-  for (const port of ports) {
-    try {
-      const transporter = nodemailer.createTransport({
-        host: env.SMTP_HOST,
-        port,
-        secure: port === 465,
-        auth: { user: env.SMTP_USER, pass: env.SMTP_PASS },
-        connectionTimeout: 10000,
-      });
-
-      const info = await transporter.sendMail({
-        from: `"PMS Enterprise" <${env.SMTP_USER}>`,
-        to,
-        subject,
-        html,
-      });
-
-      console.log(`✅ Email sent to ${to} via port ${port} — Message ID: ${info.messageId}`);
-      return info;
-    } catch (err) {
-      console.warn(`⚠️  Port ${port} failed: ${err.message}`);
-      lastError = err;
+    if (error) {
+      console.error(`❌ Resend error:`, error);
+      throw new Error(error.message);
     }
+
+    console.log(`✅ Email sent to ${to} via Resend — ID: ${data.id}`);
+    return data;
   }
 
-  console.error(`❌ All SMTP ports failed for ${to}:`, lastError.message);
-  throw lastError;
+  // Priority 2: SMTP (Gmail etc.)
+  if (env.SMTP_USER && env.SMTP_PASS) {
+    console.log(`📧 Sending email to ${to} via SMTP ${env.SMTP_HOST}...`);
+    const transporter = nodemailer.createTransport({
+      host: env.SMTP_HOST,
+      port: Number(env.SMTP_PORT),
+      secure: Number(env.SMTP_PORT) === 465,
+      auth: { user: env.SMTP_USER, pass: env.SMTP_PASS },
+      connectionTimeout: 10000,
+    });
+
+    const info = await transporter.sendMail({
+      from: `"PMS Enterprise" <${env.SMTP_USER}>`,
+      to,
+      subject,
+      html,
+    });
+
+    console.log(`✅ Email sent to ${to} via SMTP — Message ID: ${info.messageId}`);
+    return info;
+  }
+
+  console.warn("⚠️  No email provider configured. Set RESEND_API_KEY or SMTP_USER/SMTP_PASS.");
+  return { skipped: true, reason: "No email provider configured" };
 };
 
 export default sendEmail;

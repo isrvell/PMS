@@ -52,47 +52,29 @@ app.get("/api/health", (req, res) => {
   res.json({ status: "ok", timestamp: new Date().toISOString() });
 });
 
-// SMTP diagnostic endpoint
+// SMTP/Resend diagnostic endpoint
 app.get("/api/smtp-check", async (req, res) => {
   const config = {
+    RESEND_API_KEY: env.RESEND_API_KEY ? "SET (hidden)" : "NOT SET",
     SMTP_HOST: env.SMTP_HOST || "NOT SET",
     SMTP_PORT: env.SMTP_PORT || "NOT SET",
     SMTP_USER: env.SMTP_USER ? `${env.SMTP_USER.slice(0, 4)}...` : "NOT SET",
-    SMTP_PASS: env.SMTP_PASS ? "SET (hidden)" : "NOT SET",
     CLIENT_URL: env.CLIENT_URL || "NOT SET",
   };
 
-  if (!env.SMTP_USER || !env.SMTP_PASS) {
-    return res.json({ status: "misconfigured", config, message: "SMTP credentials missing" });
-  }
-
-  const nodemailer = (await import("nodemailer")).default;
-  const ports = [Number(env.SMTP_PORT), 465];
-  const results = [];
-
-  for (const port of ports) {
+  if (env.RESEND_API_KEY) {
     try {
-      const transporter = nodemailer.createTransport({
-        host: env.SMTP_HOST,
-        port,
-        secure: port === 465,
-        auth: { user: env.SMTP_USER, pass: env.SMTP_PASS },
-        connectionTimeout: 10000,
-      });
-      await transporter.verify();
-      results.push({ port, status: "ok" });
+      const { Resend } = await import("resend");
+      const resend = new Resend(env.RESEND_API_KEY);
+      // Quick API check
+      await resend.domains.list();
+      return res.json({ status: "ok", provider: "resend", config });
     } catch (err) {
-      results.push({ port, status: "error", message: err.message });
+      return res.json({ status: "error", provider: "resend", config, message: err.message });
     }
   }
 
-  const working = results.find((r) => r.status === "ok");
-  res.json({
-    status: working ? "ok" : "error",
-    config,
-    workingPort: working?.port || null,
-    results,
-  });
+  res.json({ status: "misconfigured", config, message: "No email provider configured" });
 });
 
 app.use("/api/auth", authRoutes);
