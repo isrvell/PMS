@@ -66,19 +66,33 @@ app.get("/api/smtp-check", async (req, res) => {
     return res.json({ status: "misconfigured", config, message: "SMTP credentials missing" });
   }
 
-  try {
-    const nodemailer = (await import("nodemailer")).default;
-    const transporter = nodemailer.createTransport({
-      host: env.SMTP_HOST,
-      port: Number(env.SMTP_PORT),
-      secure: Number(env.SMTP_PORT) === 465,
-      auth: { user: env.SMTP_USER, pass: env.SMTP_PASS },
-    });
-    await transporter.verify();
-    res.json({ status: "ok", config, message: "SMTP connection verified" });
-  } catch (err) {
-    res.json({ status: "error", config, message: err.message });
+  const nodemailer = (await import("nodemailer")).default;
+  const ports = [Number(env.SMTP_PORT), 465];
+  const results = [];
+
+  for (const port of ports) {
+    try {
+      const transporter = nodemailer.createTransport({
+        host: env.SMTP_HOST,
+        port,
+        secure: port === 465,
+        auth: { user: env.SMTP_USER, pass: env.SMTP_PASS },
+        connectionTimeout: 10000,
+      });
+      await transporter.verify();
+      results.push({ port, status: "ok" });
+    } catch (err) {
+      results.push({ port, status: "error", message: err.message });
+    }
   }
+
+  const working = results.find((r) => r.status === "ok");
+  res.json({
+    status: working ? "ok" : "error",
+    config,
+    workingPort: working?.port || null,
+    results,
+  });
 });
 
 app.use("/api/auth", authRoutes);
