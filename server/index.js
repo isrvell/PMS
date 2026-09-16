@@ -31,11 +31,17 @@ import filterRoutes from "./routes/filter.routes.js";
 import slaRoutes from "./routes/sla.routes.js";
 import searchRoutes from "./routes/search.routes.js";
 import notificationRoutes from "./routes/notification.routes.js";
+import { createServer } from "http";
 import resourceRoutes from "./routes/resource.routes.js";
+import chatRoutes from "./routes/chat.routes.js";
 import auth from "./middleware/auth.js";
 import { addClient } from "./utils/sseHub.js";
+import { initSocket } from "./utils/socketHub.js";
 
 const app = express();
+const httpServer = createServer(app);
+const io = initSocket(httpServer);
+app.set("io", io);
 
 const isProduction = process.env.NODE_ENV === "production";
 app.use(cors({
@@ -94,6 +100,7 @@ app.use("/api/workspaces/:workspaceId/filters", filterRoutes);
 app.use("/api/workspaces/:workspaceId/sla", slaRoutes);
 app.use("/api/workspaces/:workspaceId/search", searchRoutes);
 app.use("/api/workspaces/:workspaceId/notifications", notificationRoutes);
+app.use("/api/workspaces/:workspaceId/chat", chatRoutes);
 app.use("/api/workspaces/:workspaceId", auth, resourceRoutes);
 
 // Global SSE stream (no workspace context needed)
@@ -123,7 +130,7 @@ const start = async () => {
   await connectDB();
   await sequelize.sync();
   console.log("Database tables synced");
-  app.listen(env.PORT, () => {
+  httpServer.listen(env.PORT, () => {
     console.log(`Server running on port ${env.PORT}`);
   });
 };

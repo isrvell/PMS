@@ -44,7 +44,21 @@ export default {
   reports: "Rapports",
   filters: "Filtres",
   calendar: "Calendrier",
+  chat: "Discussions",
   admin: "Administration",
+
+  // Chat
+  channels: "Canaux",
+  directMessages: "Messages directs",
+  typeMessage: "Écrivez votre message ici...",
+  send: "Envoyer",
+  createChannel: "Créer un canal",
+  channelName: "Nom du canal",
+  selectChannelToStart: "Sélectionnez un canal ou une discussion pour démarrer",
+  online: "En ligne",
+  offline: "Hors ligne",
+  newChannel: "Nouveau canal",
+  startDirectMessage: "Nouvelle discussion privée",
 
   // Dashboard
   goodMorning: "Bonjour,",

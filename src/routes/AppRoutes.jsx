@@ -14,6 +14,7 @@ import CalendarView from "../pages/Calendar/Calendar.jsx";
 import Admin from "../pages/Admin/Admin.jsx";
 import Profile from "../pages/Profile/Profile.jsx";
 import Settings from "../pages/Settings/Settings.jsx";
+import Chat from "../pages/Chat/Chat.jsx";
 
 function AppRoutes() {
   return (
@@ -31,6 +32,7 @@ function AppRoutes() {
             <Route path="/kanban" element={<Kanban />} />
             <Route path="/reports" element={<Reports />} />
             <Route path="/calendar" element={<CalendarView />} />
+            <Route path="/chat" element={<Chat />} />
             <Route path="/admin" element={<Admin />} />
             <Route path="/profile" element={<Profile />} />
             <Route path="/settings" element={<Settings />} />

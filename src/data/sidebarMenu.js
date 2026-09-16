@@ -37,6 +37,12 @@ export const sidebarMenu = [
   },
   {
     id: 7,
+    title: "Chat",
+    path: "/chat",
+    icon: "bi bi-chat-dots",
+  },
+  {
+    id: 8,
     title: "Admin",
     path: "/admin",
     icon: "bi bi-gear",

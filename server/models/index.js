@@ -19,6 +19,9 @@ import SavedFilter from "./SavedFilter.js";
 import SLA from "./SLA.js";
 import Notification from "./Notification.js";
 import Resource from "./Resource.js";
+import ChatChannel from "./ChatChannel.js";
+import ChatMessage from "./ChatMessage.js";
+import ChatMember from "./ChatMember.js";
 
 Workspace.belongsTo(User, { as: "owner", foreignKey: "ownerId" });
 
@@ -98,6 +101,19 @@ Resource.belongsTo(Workspace, { foreignKey: "workspaceId" });
 Resource.belongsTo(User, { as: "uploader", foreignKey: "uploadedBy" });
 Project.hasMany(Resource, { as: "resources", foreignKey: "projectId" });
 
+// Chat relations
+ChatChannel.belongsTo(Workspace, { foreignKey: "workspaceId" });
+ChatChannel.belongsTo(Project, { foreignKey: "projectId" });
+ChatChannel.belongsTo(User, { as: "createdBy", foreignKey: "createdById" });
+ChatChannel.hasMany(ChatMessage, { as: "messages", foreignKey: "channelId" });
+ChatChannel.hasMany(ChatMember, { as: "members", foreignKey: "channelId" });
+
+ChatMessage.belongsTo(ChatChannel, { foreignKey: "channelId" });
+ChatMessage.belongsTo(User, { as: "sender", foreignKey: "senderId" });
+
+ChatMember.belongsTo(ChatChannel, { foreignKey: "channelId" });
+ChatMember.belongsTo(User, { as: "user", foreignKey: "userId" });
+
 export {
   sequelize,
   User,
@@ -120,4 +136,7 @@ export {
   Comment,
   Notification,
   Resource,
+  ChatChannel,
+  ChatMessage,
+  ChatMember,
 };

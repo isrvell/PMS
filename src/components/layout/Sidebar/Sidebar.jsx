@@ -19,6 +19,7 @@ function Sidebar({ collapsed, onToggle, mobileOpen, onMobileClose }) {
     "/reports": t("reports"),
     "/filters": t("filters"),
     "/calendar": t("calendar"),
+    "/chat": t("chat"),
     "/admin": t("admin"),
   };
 
