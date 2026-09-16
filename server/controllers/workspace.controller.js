@@ -1,4 +1,4 @@
-import { Workspace, WorkspaceMember, User, Activity } from "../models/index.js";
+import { Workspace, WorkspaceMember, User, Activity, TeamMember } from "../models/index.js";
 
 export const createWorkspace = async (req, res, next) => {
   try {
@@ -27,7 +27,7 @@ export const getWorkspaces = async (req, res, next) => {
 
 export const getWorkspace = async (req, res) => {
   const workspace = await Workspace.findByPk(req.workspace.id, {
-    include: [{ model: WorkspaceMember, as: "members", include: [{ model: User, as: "user", attributes: ["id", "name", "email", "avatar"] }] }],
+    include: [{ model: WorkspaceMember, as: "members", include: [{ model: User, as: "user", attributes: ["id", "name", "email", "avatar", "jobTitle", "department"] }] }],
   });
   res.json(workspace);
 };
@@ -60,7 +60,7 @@ export const getMembers = async (req, res, next) => {
   try {
     const members = await WorkspaceMember.findAll({
       where: { workspaceId: req.workspace.id },
-      include: [{ model: User, as: "user", attributes: ["id", "name", "email", "avatar", "role", "isActive"] }],
+      include: [{ model: User, as: "user", attributes: ["id", "name", "email", "avatar", "role", "isActive", "jobTitle", "department"] }],
     });
     res.json(members);
   } catch (error) {
@@ -93,14 +93,29 @@ export const removeMember = async (req, res, next) => {
 export const updateMemberRole = async (req, res, next) => {
   try {
     const { userId } = req.params;
-    const { role } = req.body;
+    const { role, jobTitle, department } = req.body;
 
     const member = await WorkspaceMember.findOne({ where: { workspaceId: req.workspace.id, userId } });
     if (!member) return res.status(404).json({ message: "Member not found" });
 
-    member.role = role;
-    await member.save();
-    res.json({ message: "Role updated" });
+    if (role) {
+      member.role = role;
+      await member.save();
+    }
+
+    if (jobTitle !== undefined || department !== undefined) {
+      const userUpdates = {};
+      if (jobTitle !== undefined) userUpdates.jobTitle = jobTitle;
+      if (department !== undefined) userUpdates.department = department;
+      await User.update(userUpdates, { where: { id: userId } });
+
+      const teamUpdates = {};
+      if (jobTitle !== undefined) teamUpdates.role = jobTitle;
+      if (department !== undefined) teamUpdates.department = department;
+      await TeamMember.update(teamUpdates, { where: { workspaceId: req.workspace.id, userId } });
+    }
+
+    res.json({ message: "Member updated" });
   } catch (error) {
     next(error);
   }

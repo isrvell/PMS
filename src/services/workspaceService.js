@@ -3,10 +3,10 @@ import apiFetch from "./api.js";
 export const getWorkspaceMembers = (workspaceId) =>
   apiFetch(`/workspaces/${workspaceId}/members`);
 
-export const updateMemberRole = (workspaceId, userId, role) =>
+export const updateMemberRole = (workspaceId, userId, role, extraData = {}) =>
   apiFetch(`/workspaces/${workspaceId}/members/${userId}/role`, {
     method: "PUT",
-    body: JSON.stringify({ role }),
+    body: JSON.stringify({ role, ...extraData }),
   });
 
 export const removeMember = (workspaceId, userId) =>

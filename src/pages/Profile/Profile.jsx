@@ -9,19 +9,41 @@ function Profile() {
   const { user, loginUser } = useAuth();
   const { t } = useLanguage();
   const [name, setName] = useState(user?.name || "");
+  const [jobTitle, setJobTitle] = useState(user?.jobTitle || "Developer Frontend");
+  const [department, setDepartment] = useState(user?.department || "frontend");
+  const [customJobTitle, setCustomJobTitle] = useState("");
+  const [isCustomTitle, setIsCustomTitle] = useState(false);
+
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [message, setMessage] = useState("");
   const fileInputRef = useRef(null);
+
+  const defaultJobTitles = [
+    "Developer Frontend",
+    "Developer Backend",
+    "Fullstack Developer",
+    "Designer UI/UX",
+    "Product Manager",
+    "DevOps Engineer",
+    "QA Engineer",
+    "System Architect",
+    "Scrum Master",
+  ];
 
   const handleSave = async (e) => {
     e.preventDefault();
     setSaving(true);
     setMessage("");
     try {
+      const finalJobTitle = isCustomTitle && customJobTitle.trim() ? customJobTitle.trim() : jobTitle;
       const updated = await apiFetch("/auth/me", {
         method: "PUT",
-        body: JSON.stringify({ name }),
+        body: JSON.stringify({
+          name,
+          jobTitle: finalJobTitle,
+          department,
+        }),
       });
       const token = localStorage.getItem("token");
       loginUser(token, updated);
@@ -103,9 +125,14 @@ function Profile() {
               <p className="profile-avatar-hint">{t("clickPhotoToChange")}</p>
               <h4 className="profile-name">{user?.name}</h4>
               <p className="profile-email">{user?.email}</p>
-              <span className={`profile-role-badge role-${user?.role}`}>
-                {user?.role === "admin" ? "Admin" : "Member"}
-              </span>
+              <div className="d-flex justify-content-center gap-2 mt-2">
+                <span className={`profile-role-badge role-${user?.role}`}>
+                  {user?.role === "admin" ? "Admin" : "Member"}
+                </span>
+                <span className="badge bg-secondary text-capitalize">
+                  {user?.jobTitle || "Developer Frontend"}
+                </span>
+              </div>
             </div>
           </div>
 
@@ -132,7 +159,7 @@ function Profile() {
                   <small className="text-muted">{t("emailCannotBeChanged")}</small>
                 </div>
 
-                <div className="mb-4">
+                <div className="mb-3">
                   <label htmlFor="profile-name" className="form-label profile-label">{t("fullName")}</label>
                   <input
                     type="text"
@@ -142,6 +169,58 @@ function Profile() {
                     onChange={(e) => setName(e.target.value)}
                     required
                   />
+                </div>
+
+                <div className="row g-3 mb-4">
+                  <div className="col-md-6">
+                    <label className="form-label profile-label">Poste / Intitulé (ex: Developer Frontend)</label>
+                    <select
+                      className="form-select profile-input"
+                      value={isCustomTitle ? "custom" : jobTitle}
+                      onChange={(e) => {
+                        if (e.target.value === "custom") {
+                          setIsCustomTitle(true);
+                        } else {
+                          setIsCustomTitle(false);
+                          setJobTitle(e.target.value);
+                        }
+                      }}
+                    >
+                      {defaultJobTitles.map((title) => (
+                        <option key={title} value={title}>
+                          {title}
+                        </option>
+                      ))}
+                      <option value="custom">Autre (Saisie personnalisée...)</option>
+                    </select>
+
+                    {isCustomTitle && (
+                      <input
+                        type="text"
+                        className="form-control profile-input mt-2"
+                        placeholder="Saisissez votre poste..."
+                        value={customJobTitle}
+                        onChange={(e) => setCustomJobTitle(e.target.value)}
+                        required
+                      />
+                    )}
+                  </div>
+
+                  <div className="col-md-6">
+                    <label className="form-label profile-label">Département</label>
+                    <select
+                      className="form-select profile-input"
+                      value={department}
+                      onChange={(e) => setDepartment(e.target.value)}
+                    >
+                      <option value="frontend">Frontend</option>
+                      <option value="backend">Backend</option>
+                      <option value="design">Design</option>
+                      <option value="management">Management / Produit</option>
+                      <option value="qa">QA / Test</option>
+                      <option value="devops">DevOps / Infra</option>
+                    </select>
+                  </div>
                 </div>
 
                 <button type="submit" className="btn profile-save-btn" disabled={saving}>

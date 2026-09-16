@@ -164,12 +164,23 @@ export const getMe = async (req, res, next) => {
 
 export const updateMe = async (req, res, next) => {
   try {
-    const { name, avatar } = req.body;
+    const { name, avatar, jobTitle, department } = req.body;
     const updates = {};
     if (name) updates.name = name;
     if (avatar !== undefined) updates.avatar = avatar;
+    if (jobTitle !== undefined) updates.jobTitle = jobTitle;
+    if (department !== undefined) updates.department = department;
 
     await User.update(updates, { where: { id: req.user.id } });
+
+    // Sync TeamMember records for this user
+    if (jobTitle || department) {
+      const teamUpdates = {};
+      if (jobTitle) teamUpdates.role = jobTitle;
+      if (department) teamUpdates.department = department;
+      await TeamMember.update(teamUpdates, { where: { userId: req.user.id } });
+    }
+
     const user = await User.findByPk(req.user.id);
     res.json(user);
   } catch (error) {
