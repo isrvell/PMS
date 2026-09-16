@@ -44,8 +44,6 @@ router.post(
   "/register",
   [
     body("token").notEmpty().withMessage("Invitation token is required"),
-    body("name").trim().notEmpty().withMessage("Name is required"),
-    body("password").isLength({ min: 6 }).withMessage("Password must be at least 6 characters"),
     validate,
   ],
   register

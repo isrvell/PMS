@@ -1,7 +1,7 @@
 const API_BASE = "/api";
 
-async function apiFetch(endpoint, options = {}) {
-  const token = localStorage.getItem("token");
+async function apiFetch(endpoint, options = {}, skipAuth = false) {
+  const token = !skipAuth ? localStorage.getItem("token") : null;
   const config = {
     headers: {
       "Content-Type": "application/json",
@@ -13,7 +13,7 @@ async function apiFetch(endpoint, options = {}) {
 
   const res = await fetch(`${API_BASE}${endpoint}`, config);
 
-  if (res.status === 401) {
+  if (res.status === 401 && !skipAuth) {
     localStorage.removeItem("token");
     window.location.href = "/login";
     return;

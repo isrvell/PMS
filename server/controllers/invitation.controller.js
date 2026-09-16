@@ -3,6 +3,30 @@ import generateInviteCode from "../utils/generateInviteCode.js";
 import sendEmail from "../utils/sendEmail.js";
 import env from "../config/env.js";
 
+const getInviteUrl = (req, token) => {
+  let origin = req?.headers?.origin || req?.headers?.referer;
+  if (origin) {
+    try {
+      const parsed = new URL(origin);
+      origin = parsed.origin;
+    } catch {
+      origin = null;
+    }
+  }
+
+  if (!origin && req) {
+    const protocol = req.headers["x-forwarded-proto"] || req.protocol || "http";
+    const host = req.headers["x-forwarded-host"] || req.get("host");
+    if (host) {
+      origin = `${protocol}://${host}`;
+    }
+  }
+
+  const baseUrl = origin || process.env.RENDER_EXTERNAL_URL || env.CLIENT_URL || "http://localhost:5173";
+  const cleanBase = baseUrl.replace(/\/+$/, "");
+  return `${cleanBase}/invite/${token}`;
+};
+
 export const createInvitation = async (req, res, next) => {
   try {
     const { email, role } = req.body;
@@ -34,7 +58,7 @@ export const createInvitation = async (req, res, next) => {
       expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
     });
 
-    const inviteUrl = `${env.CLIENT_URL}/invite/${token}`;
+    const inviteUrl = getInviteUrl(req, token);
 
     // Try to send email (non-blocking — invitation is created regardless)
     const emailResult = await sendEmail({
@@ -78,7 +102,7 @@ export const getInvitations = async (req, res, next) => {
     // Add invite URLs
     const result = invitations.map((inv) => {
       const data = inv.toJSON();
-      data.inviteUrl = `${env.CLIENT_URL}/invite/${inv.token}`;
+      data.inviteUrl = getInviteUrl(req, inv.token);
       return data;
     });
 
@@ -113,7 +137,7 @@ export const resendInvitation = async (req, res, next) => {
     invitation.expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
     await invitation.save();
 
-    const inviteUrl = `${env.CLIENT_URL}/invite/${invitation.token}`;
+    const inviteUrl = getInviteUrl(req, invitation.token);
     const emailResult = await sendEmail({
       to: invitation.email,
       subject: `Reminder: You've been invited to ${req.workspace.name}`,
