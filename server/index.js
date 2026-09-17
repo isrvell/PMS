@@ -128,7 +128,17 @@ app.get("*", (_req, res) => {
 
 const start = async () => {
   await connectDB();
-  await sequelize.sync();
+
+  // SQLite: disable FK checks during alter to avoid constraint errors
+  const isSQLite = sequelize.getDialect() === "sqlite";
+  if (isSQLite) {
+    await sequelize.query("PRAGMA foreign_keys = OFF;");
+  }
+  await sequelize.sync({ alter: true });
+  if (isSQLite) {
+    await sequelize.query("PRAGMA foreign_keys = ON;");
+  }
+
   console.log("Database tables synced");
   httpServer.listen(env.PORT, () => {
     console.log(`Server running on port ${env.PORT}`);

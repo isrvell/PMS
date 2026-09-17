@@ -1,6 +1,8 @@
 import { ChatChannel, ChatMessage, ChatMember, User, Project, WorkspaceMember } from "../models/index.js";
 import { Op } from "sequelize";
 
+const USER_ATTRS = ["id", "name", "email", "avatar", "role", "jobTitle", "department"];
+
 export async function getChannels(req, res, next) {
   try {
     const { workspaceId } = req.params;
@@ -64,7 +66,7 @@ export async function getChannels(req, res, next) {
         {
           model: ChatMember,
           as: "members",
-          include: [{ model: User, as: "user", attributes: ["id", "name", "email", "avatar", "role"] }],
+          include: [{ model: User, as: "user", attributes: USER_ATTRS }],
         },
       ],
     });
@@ -72,7 +74,7 @@ export async function getChannels(req, res, next) {
     // 5. Fetch workspace team members to allow starting new DMs
     const workspaceMembers = await WorkspaceMember.findAll({
       where: { workspaceId },
-      include: [{ model: User, as: "user", attributes: ["id", "name", "email", "avatar", "role"] }],
+      include: [{ model: User, as: "user", attributes: USER_ATTRS }],
     });
 
     res.json({
@@ -144,7 +146,7 @@ export async function getOrCreateDirectChannel(req, res, next) {
           {
             model: ChatMember,
             as: "members",
-            include: [{ model: User, as: "user", attributes: ["id", "name", "email", "avatar", "role"] }],
+            include: [{ model: User, as: "user", attributes: USER_ATTRS }],
           },
         ],
       });
@@ -153,7 +155,6 @@ export async function getOrCreateDirectChannel(req, res, next) {
 
     if (!channel) {
       // Create new DM channel
-      const targetUser = await User.findByPk(targetUserId, { attributes: ["name"] });
       channel = await ChatChannel.create({
         workspaceId,
         name: `DM-${userId.slice(0, 4)}-${targetUserId.slice(0, 4)}`,
@@ -171,7 +172,7 @@ export async function getOrCreateDirectChannel(req, res, next) {
           {
             model: ChatMember,
             as: "members",
-            include: [{ model: User, as: "user", attributes: ["id", "name", "email", "avatar", "role"] }],
+            include: [{ model: User, as: "user", attributes: USER_ATTRS }],
           },
         ],
       });
@@ -193,7 +194,7 @@ export async function getMessages(req, res, next) {
         {
           model: User,
           as: "sender",
-          attributes: ["id", "name", "email", "avatar", "role"],
+          attributes: USER_ATTRS,
         },
       ],
       order: [["createdAt", "ASC"]],
@@ -216,6 +217,11 @@ export async function sendMessage(req, res, next) {
       return res.status(400).json({ message: "Message content cannot be empty" });
     }
 
+    const channel = await ChatChannel.findByPk(channelId);
+    if (!channel) {
+      return res.status(404).json({ message: "Channel not found" });
+    }
+
     const message = await ChatMessage.create({
       channelId,
       senderId,
@@ -228,15 +234,21 @@ export async function sendMessage(req, res, next) {
         {
           model: User,
           as: "sender",
-          attributes: ["id", "name", "email", "avatar", "role"],
+          attributes: USER_ATTRS,
         },
       ],
     });
 
-    // If socket server is available on app, emit event
+    // Notify room and individual user rooms for instant delivery
     const io = req.app.get("io");
     if (io) {
       io.to(`channel:${channelId}`).emit("new_message", fullMessage);
+
+      // If DM channel, notify target members' personal user rooms as well
+      const members = await ChatMember.findAll({ where: { channelId } });
+      for (const m of members) {
+        io.to(`user:${m.userId}`).emit("new_message", fullMessage);
+      }
     }
 
     res.status(201).json(fullMessage);

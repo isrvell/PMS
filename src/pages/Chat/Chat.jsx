@@ -37,6 +37,11 @@ function Chat() {
   const socketRef = useRef(null);
   const messagesEndRef = useRef(null);
   const typingTimeoutRef = useRef(null);
+  const activeChannelRef = useRef(null);
+
+  useEffect(() => {
+    activeChannelRef.current = activeChannel;
+  }, [activeChannel]);
 
   // 1. Initialize Socket.io connection
   useEffect(() => {
@@ -54,31 +59,36 @@ function Chat() {
     });
 
     socket.on("new_message", (newMsg) => {
-      setMessages((prev) => {
-        if (prev.some((m) => m.id === newMsg.id)) return prev;
-        if (activeChannel && newMsg.channelId === activeChannel.id) {
-          return [...prev, newMsg];
-        }
-        return prev;
-      });
+      if (activeChannelRef.current && newMsg.channelId === activeChannelRef.current.id) {
+        setMessages((prev) => (prev.some((m) => m.id === newMsg.id) ? prev : [...prev, newMsg]));
+      }
+      if (workspaceId) {
+        getChannels(workspaceId).then((data) => {
+          setChannels(data.channels || []);
+          setDirectChannels(data.directChannels || []);
+          setWorkspaceMembers(data.workspaceMembers || []);
+        }).catch(() => {});
+      }
     });
 
     socket.on("user_typing", ({ channelId, userId, userName, isTyping }) => {
-      setTypingUsers((prev) => {
-        if (isTyping) {
-          return { ...prev, [userId]: userName };
-        } else {
-          const copy = { ...prev };
-          delete copy[userId];
-          return copy;
-        }
-      });
+      if (activeChannelRef.current && channelId === activeChannelRef.current.id) {
+        setTypingUsers((prev) => {
+          if (isTyping) {
+            return { ...prev, [userId]: userName };
+          } else {
+            const copy = { ...prev };
+            delete copy[userId];
+            return copy;
+          }
+        });
+      }
     });
 
     return () => {
       socket.disconnect();
     };
-  }, [user]);
+  }, [user, workspaceId]);
 
   // 2. Fetch channels when workspaceId changes
   useEffect(() => {
@@ -244,7 +254,7 @@ function Chat() {
         <div className="chat-sidebar-header">
           <div className="chat-title-row">
             <h2>
-              <i className="bi bi-chat-dots-fill text-primary"></i> Chat
+              <i className="bi bi-chat-dots-fill"></i> Chat
             </h2>
             <button
               className="chat-add-btn"

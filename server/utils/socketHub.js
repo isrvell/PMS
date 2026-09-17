@@ -19,6 +19,10 @@ export function initSocket(httpServer) {
         onlineUsers.set(userId, new Set());
       }
       onlineUsers.get(userId).add(socket.id);
+
+      // Join user's personal room for direct notification delivery
+      socket.join(`user:${userId}`);
+
       io.emit("user_presence", Array.from(onlineUsers.keys()));
     }
 
