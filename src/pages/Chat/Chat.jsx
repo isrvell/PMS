@@ -10,6 +10,7 @@ import {
   getChannelMessages,
   sendChannelMessage,
 } from "../../services/chatService.js";
+import Modal from "../../components/ui/Modal/Modal.jsx";
 import "./Chat.css";
 
 function Chat() {
@@ -358,7 +359,7 @@ function Chat() {
               {messages.length === 0 ? (
                 <div className="chat-empty-state">
                   <i className="bi bi-chat-text"></i>
-                  <p>Aucun message dans ce canal. Envoyez le premier !</p>
+                  <p>{t("chatNoMessages")}</p>
                 </div>
               ) : (
                 messages.map((msg) => {
@@ -391,7 +392,7 @@ function Chat() {
             {/* Typing status */}
             {Object.keys(typingUsers).length > 0 && (
               <div className="typing-indicator">
-                {Object.values(typingUsers).join(", ")} est en train d'écrire...
+                {Object.values(typingUsers).join(", ")} {t("chatIsTyping")}
               </div>
             )}
 
@@ -430,79 +431,73 @@ function Chat() {
       </div>
 
       {/* Modal for Creating New Channel */}
-      {showModal && (
-        <div className="modal show d-block" tabIndex="-1" style={{ backgroundColor: "rgba(0,0,0,0.5)" }}>
-          <div className="modal-dialog modal-dialog-centered">
-            <div className="modal-content">
-              <div className="modal-header">
-                <h5 className="modal-title">{t("createChannel")}</h5>
-                <button
-                  type="button"
-                  className="btn-close"
-                  onClick={() => {
-                    setShowModal(false);
-                    setModalError("");
-                  }}
-                  disabled={isCreating}
-                ></button>
-              </div>
-              <form onSubmit={handleCreateChannelSubmit}>
-                <div className="modal-body">
-                  {modalError && (
-                    <div className="alert alert-danger py-2">{modalError}</div>
-                  )}
-                  <div className="mb-3">
-                    <label className="form-label">{t("channelName")}</label>
-                    <input
-                      type="text"
-                      className="form-control"
-                      placeholder="ex: discussions-techniques"
-                      value={newChannelName}
-                      onChange={(e) => setNewChannelName(e.target.value)}
-                      required
-                      disabled={isCreating}
-                    />
-                  </div>
-                  <div className="mb-3">
-                    <label className="form-label">{t("description")}</label>
-                    <input
-                      type="text"
-                      className="form-control"
-                      placeholder="Objectif de ce canal..."
-                      value={newChannelDesc}
-                      onChange={(e) => setNewChannelDesc(e.target.value)}
-                      disabled={isCreating}
-                    />
-                  </div>
-                </div>
-                <div className="modal-footer">
-                  <button
-                    type="button"
-                    className="btn btn-secondary"
-                    onClick={() => {
-                      setShowModal(false);
-                      setModalError("");
-                    }}
-                    disabled={isCreating}
-                  >
-                    {t("cancel")}
-                  </button>
-                  <button type="submit" className="btn btn-primary" disabled={isCreating || !newChannelName.trim()}>
-                    {isCreating ? (
-                      <>
-                        <span className="spinner-border spinner-border-sm me-2" role="status"></span>
-                        {t("loading")}
-                      </>
-                    ) : (
-                      t("create")
-                    )}
-                  </button>
-                </div>
-              </form>
-            </div>
+      <Modal
+        isOpen={showModal}
+        onClose={() => {
+          setShowModal(false);
+          setModalError("");
+        }}
+        title={t("createChannel")}
+        footer={
+          <>
+            <button
+              type="button"
+              className="chat-modal-btn-cancel"
+              onClick={() => {
+                setShowModal(false);
+                setModalError("");
+              }}
+              disabled={isCreating}
+            >
+              {t("cancel")}
+            </button>
+            <button
+              type="submit"
+              form="create-channel-form"
+              className="chat-modal-btn-submit"
+              disabled={isCreating || !newChannelName.trim()}
+            >
+              {isCreating ? (
+                <>
+                  <span className="chat-spinner"></span>
+                  {t("loading")}
+                </>
+              ) : (
+                t("create")
+              )}
+            </button>
+          </>
+        }
+      >
+        <form id="create-channel-form" onSubmit={handleCreateChannelSubmit}>
+          {modalError && (
+            <div className="chat-modal-error">{modalError}</div>
+          )}
+          <div className="chat-modal-field">
+            <label className="chat-modal-label">{t("channelName")}</label>
+            <input
+              type="text"
+              className="chat-modal-input"
+              placeholder={t("chatChannelPlaceholder")}
+              value={newChannelName}
+              onChange={(e) => setNewChannelName(e.target.value)}
+              required
+              disabled={isCreating}
+            />
           </div>
-        </div>
-      )}
+          <div className="chat-modal-field">
+            <label className="chat-modal-label">{t("description")}</label>
+            <input
+              type="text"
+              className="chat-modal-input"
+              placeholder={t("chatChannelDescPlaceholder")}
+              value={newChannelDesc}
+              onChange={(e) => setNewChannelDesc(e.target.value)}
+              disabled={isCreating}
+            />
+          </div>
+        </form>
+      </Modal>
     </div>
   );
 }

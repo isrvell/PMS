@@ -72,6 +72,10 @@
   --sidebar-hover-bg: #F0F0F0;
   --sidebar-active-bg: #F0F0F0;
 
+  /* Status indicators */
+  --color-online: #22C55E;
+  --color-offline: var(--color-text-muted);
+
   /* Transitions */
   --transition-fast: 0.15s cubic-bezier(0.16, 1, 0.3, 1);
   --transition-normal: 0.25s cubic-bezier(0.16, 1, 0.3, 1);
@@ -115,4 +119,7 @@
   --sidebar-text-active: #FFFFFF;
   --sidebar-hover-bg: #1A1A1A;
   --sidebar-active-bg: #1A1A1A;
+
+  --color-online: #4ADE80;
+  --color-offline: var(--color-text-muted);
 }

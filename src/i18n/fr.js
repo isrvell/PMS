@@ -304,4 +304,8 @@ export default {
   removeMemberConfirm: "Retirer ce membre du projet ?",
   selectMember: "Sélectionner un membre...",
   memberAlreadyAdded: "Déjà dans ce projet",
+  chatNoMessages: "Aucun message dans ce canal. Envoyez le premier !",
+  chatIsTyping: "est en train d'écrire...",
+  chatChannelPlaceholder: "ex: discussions-techniques",
+  chatChannelDescPlaceholder: "Objectif de ce canal...",
 };
