@@ -14,7 +14,22 @@ async function seed() {
     const dialect = sequelize.getDialect();
 
     if (dialect === "postgres") {
-      await sequelize.sync({ alter: true });
+      // Manually add missing columns before sync to avoid Sequelize alter bug with FK columns
+      const qi = sequelize.getQueryInterface();
+      const usersColumns = await qi.describeTable("Users").catch(() => null);
+
+      if (usersColumns) {
+        if (!usersColumns.jobTitle) {
+          await qi.addColumn("Users", "jobTitle", { type: sequelize.constructor.DataTypes.STRING, defaultValue: "Developer Frontend" });
+          console.log("  ↳ Added column Users.jobTitle");
+        }
+        if (!usersColumns.department) {
+          await qi.addColumn("Users", "department", { type: sequelize.constructor.DataTypes.STRING, defaultValue: "frontend" });
+          console.log("  ↳ Added column Users.department");
+        }
+      }
+
+      await sequelize.sync();
 
       // Check if admin already exists — skip seed if so
       const existingAdmin = await User.findOne({ where: { email: env.ADMIN_EMAIL || "admin@pms.com" } });
