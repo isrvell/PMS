@@ -25,12 +25,6 @@ export const sidebarMenu = [
   },
   {
     id: 5,
-    title: "Reports",
-    path: "/reports",
-    icon: "bi bi-bar-chart",
-  },
-  {
-    id: 6,
     title: "Calendar",
     path: "/calendar",
     icon: "bi bi-calendar3",

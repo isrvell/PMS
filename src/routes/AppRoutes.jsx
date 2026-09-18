@@ -9,7 +9,6 @@ import Projects from "../pages/Projects/Projects.jsx";
 import ProjectDetail from "../pages/Projects/ProjectDetail/ProjectDetail.jsx";
 import Team from "../pages/Team/Team.jsx";
 import Kanban from "../pages/Kanban/Kanban.jsx";
-import Reports from "../pages/Reports/Reports.jsx";
 import CalendarView from "../pages/Calendar/Calendar.jsx";
 import Admin from "../pages/Admin/Admin.jsx";
 import Profile from "../pages/Profile/Profile.jsx";
@@ -30,7 +29,6 @@ function AppRoutes() {
             <Route path="/projects/:projectId" element={<ProjectDetail />} />
             <Route path="/team" element={<Team />} />
             <Route path="/kanban" element={<Kanban />} />
-            <Route path="/reports" element={<Reports />} />
             <Route path="/calendar" element={<CalendarView />} />
             <Route path="/chat" element={<Chat />} />
             <Route path="/admin" element={<Admin />} />
