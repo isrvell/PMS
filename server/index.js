@@ -126,16 +126,22 @@ app.get("*", (_req, res) => {
   res.sendFile(join(__dirname, "../dist/index.html"));
 });
 
+import { safeMigratePostgres } from "./utils/safeMigrate.js";
+
 const start = async () => {
   await connectDB();
 
-  // SQLite: disable FK checks during alter to avoid constraint errors
+  const isPostgres = sequelize.getDialect() === "postgres";
   const isSQLite = sequelize.getDialect() === "sqlite";
-  if (isSQLite) {
+
+  if (isPostgres) {
+    // Safe migration: add missing columns without breaking FK constraints
+    await safeMigratePostgres(sequelize);
+    await sequelize.sync();
+  } else {
+    // SQLite: disable FK checks during alter to avoid constraint errors
     await sequelize.query("PRAGMA foreign_keys = OFF;");
-  }
-  await sequelize.sync({ alter: true });
-  if (isSQLite) {
+    await sequelize.sync({ alter: true });
     await sequelize.query("PRAGMA foreign_keys = ON;");
   }
 

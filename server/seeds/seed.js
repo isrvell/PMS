@@ -4,31 +4,16 @@ import {
   WorkflowStatus,
 } from "../models/index.js";
 import env from "../config/env.js";
+import { safeMigratePostgres } from "../utils/safeMigrate.js";
 
 async function seed() {
   try {
     await connectDB();
 
-    // In production (PostgreSQL), only sync without force to preserve data
-    // Use force only if DB is empty (first deploy)
     const dialect = sequelize.getDialect();
 
     if (dialect === "postgres") {
-      // Manually add missing columns before sync to avoid Sequelize alter bug with FK columns
-      const qi = sequelize.getQueryInterface();
-      const usersColumns = await qi.describeTable("Users").catch(() => null);
-
-      if (usersColumns) {
-        if (!usersColumns.jobTitle) {
-          await qi.addColumn("Users", "jobTitle", { type: sequelize.constructor.DataTypes.STRING, defaultValue: "Developer Frontend" });
-          console.log("  ↳ Added column Users.jobTitle");
-        }
-        if (!usersColumns.department) {
-          await qi.addColumn("Users", "department", { type: sequelize.constructor.DataTypes.STRING, defaultValue: "frontend" });
-          console.log("  ↳ Added column Users.department");
-        }
-      }
-
+      await safeMigratePostgres(sequelize);
       await sequelize.sync();
 
       // Check if admin already exists — skip seed if so
