@@ -14,7 +14,7 @@ async function seed() {
     const dialect = sequelize.getDialect();
 
     if (dialect === "postgres") {
-      await sequelize.sync();
+      await sequelize.sync({ alter: true });
 
       // Check if admin already exists — skip seed if so
       const existingAdmin = await User.findOne({ where: { email: env.ADMIN_EMAIL || "admin@pms.com" } });
